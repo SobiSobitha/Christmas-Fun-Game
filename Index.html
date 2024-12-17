@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Merry Christmas 🎄</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #a8edea, #fed6e3);
+      color: #2F314B;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #FF6347;
+      animation: glow 1.5s infinite;
+      text-align: center;
+      margin: 0;
+    }
+
+    @keyframes glow {
+      0%, 100% {
+        text-shadow: 0 0 10px #FF6347, 0 0 20px #FF4500;
+      }
+      50% {
+        text-shadow: 0 0 20px #FF6347, 0 0 30px #FF4500;
+      }
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 10px 0 20px;
+      text-align: center;
+    }
+
+    .gift-boxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .gift {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #FFD700, #FF8C00);
+      border-radius: 10px;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .gift:hover {
+      transform: scale(1.1);
+    }
+
+    .gift::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 100%;
+      background: #FFFFFF;
+    }
+
+    .gift::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+      height: 10px;
+      background: #FFFFFF;
+    }
+
+    #snow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .music-button {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: #FF4500;
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      animation: bounce 1.5s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="snow"></canvas>
+
+  <h1>Merry Christmas, Dear Thulasi! <br>❤️🎄</h1>
+  <h2>Select 4 gifts to reveal surprises 🎁</h2>
+
+  <div class="gift-boxes" id="giftContainer">
+    <div class="gift" onclick="revealGift('You are an amazing friend!')"></div>
+    <div class="gift" onclick="revealGift('Wishing you a season filled with love and joy!')"></div>
+    <div class="gift" onclick="revealGift('May all your dreams come true this Christmas!')"></div>
+    <div class="gift" onclick="revealGift('Hope your holidays are as wonderful as you!')"></div>
+  
+    <div class="gift" onclick="revealGift('Sending you lots of warm hugs!')"></div>
+    <div class="gift" onclick="revealGift('Have the merriest Christmas ever!')"></div>
+    <div class="gift" onclick="revealGift('You are a true gift to this world!')"></div>
+    <div class="gift" onclick="revealGift('May this season bring you endless happiness!')"></div>
+  
+    <div class="gift" onclick="revealGift('May your Christmas sparkle with joy!')"></div>
+    <div class="gift" onclick="revealGift('Wishing you a Christmas full of wonder!')"></div>
+    <div class="gift" onclick="revealGift('You make this season brighter!')"></div>
+    <div class="gift" onclick="revealGift('Here’s to a season of warmth and happiness!')"></div>
+  
+    <div class="gift" onclick="revealGift('Sending you holiday cheer!')"></div>
+    <div class="gift" onclick="revealGift('May your days be merry and bright!')"></div>
+    <div class="gift" onclick="revealGift('You are the star of my Christmas!')"></div>
+    <div class="gift" onclick="revealGift('May this Christmas be filled with laughter!')"></div>
+  </div>
+  
+
+  <button class="music-button" onclick="toggleMusic()">🎵</button>
+
+  <audio id="christmasSong" loop>
+    <source src="christmas-dreams-jingle-bells-268299.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // Snowfall animation
+    const snowCanvas = document.getElementById('snow');
+    const ctxSnow = snowCanvas.getContext('2d');
+    snowCanvas.width = window.innerWidth;
+    snowCanvas.height = window.innerHeight;
+
+    const snowflakes = Array.from({ length: 200 }, () => ({
+      x: Math.random() * snowCanvas.width,
+      y: Math.random() * snowCanvas.height,
+      radius: Math.random() * 4 + 1,
+      speed: Math.random() * 3 + 1,
+    }));
+
+    function drawSnow() {
+      ctxSnow.clearRect(0, 0, snowCanvas.width, snowCanvas.height);
+      snowflakes.forEach((flake) => {
+        ctxSnow.beginPath();
+        ctxSnow.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
+        ctxSnow.fillStyle = '#FFF';
+        ctxSnow.fill();
+
+        flake.y += flake.speed;
+        if (flake.y > snowCanvas.height) flake.y = 0;
+      });
+      requestAnimationFrame(drawSnow);
+    }
+    drawSnow();
+
+    // Limit gift selections
+    let selectedGifts = 0;
+
+    function revealGift(message) {
+      if (selectedGifts < 4) {
+        alert(message);
+        selectedGifts++;
+        if (selectedGifts === 4) {
+          alert('You have revealed all your gifts! 🎉');
+        }
+      } else {
+        alert('You can only select 3 gifts. 🎁');
+      }
+    }
+
+    // Toggle music
+    const christmasSong = document.getElementById('christmasSong');
+    let isPlaying = false;
+
+    function toggleMusic() {
+      if (isPlaying) {
+        christmasSong.pause();
+        isPlaying = false;
+      } else {
+        christmasSong.play().catch((error) => {
+          console.error('Failed to play the audio:', error);
+          alert('Unable to play the music. Please interact with the page first!');
+        });
+        isPlaying = true;
+      }
+    }
+  </script>
+</body>
+</html>
